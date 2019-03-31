@@ -9,6 +9,22 @@ class API:
         else:
             self.id = "570"
 
+    def get_heroes(self):
+        url = "http://api.steampowered.com/IEconDOTA2_{}/GetHeroes/v1".format(self.id)
+        params = {
+            "key": self.key,
+            "language": "en-us"
+        }
+
+        r = requests.get(url, params=params)
+
+        if not r.status_code == 200:
+            print("Request error: {}".format(r.status_code))
+            return ""
+        else:
+            print("Success!")
+            return r.json()["result"]
+
     def vanity_to_id(self, vanity, bit=32):
         if not (bit == 64 or bit == 32):
             print("Error: id must be 32-bit or 64-bit")
@@ -35,13 +51,18 @@ class API:
                 print("API error: {}".format(r.json()["response"]["message"]))
                 return ""
 
-    def get_match_history(self, user_id, matches=25, before_id=None):
+    def get_match_history(self, matches=25, user_id=None, before_id=None, hero_id=None):
         url = "http://api.steampowered.com/IDOTA2Match_{}/GetMatchHistory/v1".format(self.id)
         params = {
             "key": self.key,
-            "account_id": user_id,
             "matches_requested": matches
         }
+
+        if user_id:
+            params["account_id"] = user_id
+
+        if hero_id:
+            params["hero_id"] = hero_id
 
         if before_id:
             params["start_at_match_id"] = before_id - 1
