@@ -25,6 +25,22 @@ class API:
             print("Success!")
             return r.json()["result"]
 
+    def get_items(self):
+        url = "http://api.steampowered.com/IEconDOTA2_{}/GetGameItems/v1".format(self.id)
+        params = {
+            "key": self.key,
+            "language": "en-us"
+        }
+
+        r = requests.get(url, params=params)
+
+        if not r.status_code == 200:
+            print("Request error: {}".format(r.status_code))
+            return ""
+        else:
+            print("Success!")
+            return r.json()["result"]
+
     def vanity_to_id(self, vanity, bit=32):
         if not (bit == 64 or bit == 32):
             print("Error: id must be 32-bit or 64-bit")
