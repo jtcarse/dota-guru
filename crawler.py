@@ -11,8 +11,12 @@ class Crawler:
         connection = sqlite3.connect("dota-guru.db")
         c = connection.cursor()
 
-        t = time.time()
+        last_query = time.time()
         matches = api.get_match_history(matches=100)
+
+        match_ids = map(lambda x: x["match_id"], matches)
+
+        
 
         # parse out match_ids (and validation info?)
 

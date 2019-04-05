@@ -7,7 +7,7 @@ def setup_api():
     return api
 
 class API:
-    def __init__(self, key, test=True):
+    def __init__(self, key, test=True:
         self.key = key
 
         if test:
@@ -28,7 +28,6 @@ class API:
             print("Request error: {}".format(r.status_code))
             return None
         else:
-            print("Success!")
             return r.json()["result"]["heroes"]
 
     def get_items(self):
@@ -44,7 +43,6 @@ class API:
             print("Request error: {}".format(r.status_code))
             return None
         else:
-            print("Success!")
             return r.json()["result"]["items"]
 
     def vanity_to_id(self, vanity, bit=32):
@@ -73,15 +71,17 @@ class API:
                 print("API error: {}".format(r.json()["response"]["message"]))
                 return None
 
-    def get_match_history(self, matches=25, user_id=None, before_id=None, hero_id=None):
+    def get_match_history(self, matches=25, account_id=None, before_id=None, hero_id=None, min_players=10, game_mode=1):
+
         url = "http://api.steampowered.com/IDOTA2Match_{}/GetMatchHistory/v1".format(self.id)
         params = {
             "key": self.key,
-            "matches_requested": matches
+            "matches_requested": matches,
+            "game_mode": game_mode
         }
 
-        if user_id:
-            params["account_id"] = user_id
+        if account_id:
+            params["account_id"] = account_id
 
         if hero_id:
             params["hero_id"] = hero_id
@@ -89,13 +89,15 @@ class API:
         if before_id:
             params["start_at_match_id"] = before_id - 1
 
+        if min_players:
+            params["min_players"] = min_players
+
         r = requests.get(url, params=params)
 
         if not r.status_code == 200:
             print("Request error: {}".format(r.status_code))
             return None
         else:
-            print("Success!")
             return r.json()["result"]["matches"]
 
     def get_match_details(self, match_id):
@@ -111,5 +113,4 @@ class API:
             print("Request error: {}".format(r.status_code))
             return None
         else:
-            print("Success!")
             return r.json()["result"]
